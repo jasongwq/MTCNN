@@ -1,6 +1,9 @@
 import cv2,os
 import numpy as np
 from Mtcnndnn import MTCNNDetector
+from PIL import Image
+import time
+
 #from MtcnnDetector import MTCNNDetector
 colors = [[255,0,0],[0,255,0],[0,0,255]]
 objectPoints = np.array([[2.37427, 110.322, 21.7776],
@@ -55,18 +58,23 @@ def estimateHeadPose(img, points):
             cv2.putText(img, str(eulers[i]),(0,40+20*i),3,1,colors[i])
         return eulers
 
-def test_dir(detector, dir = "images"):
+def test_dir(detector, dir = r"/face_recognition/photo/dji"):
     files = os.listdir(dir)
     for file in files:
         imgpath = dir + "/" + file
         img = cv2.imread(imgpath)
         if img is None:
             continue
-        boxes, points = detector.detect(img)
-        estimateHeadPose(img, points)
+        start=time.time()
+        boxes, points = detector.detect(img,100)
+        end=time.time()
+        print(end-start)
+        
+        #estimateHeadPose(img, points)
         drawDetection(img, boxes, points)
-        cv2.imshow('img',img)
-        cv2.waitKey()
+        image = Image.fromarray(cv2.cvtColor(img,cv2.COLOR_BGR2RGB))
+        print("---------opencv")
+        image.save(dir + "/tmp/" + file)
 
 def test_camera(detector):
     cap = cv2.VideoCapture(0)
@@ -77,10 +85,11 @@ def test_camera(detector):
         boxes, points= detector.detect(img)
         estimateHeadPose(img, points)
         drawDetection(img, boxes, points)
-        cv2.imshow('img',img)
-        cv2.waitKey(1)
+        image = Image.fromarray(cv2.cvtColor(showimg,cv2.COLOR_BGR2RGB))
+        print("---------opencv")
+        image.show()
 
 if __name__ == '__main__':
     detector = MTCNNDetector() 
-    #test_dir(detector)
-    test_camera(detector)
+    test_dir(detector)
+    #test_camera(detector)

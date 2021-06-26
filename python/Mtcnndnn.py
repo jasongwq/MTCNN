@@ -103,25 +103,25 @@ class MTCNNDetector(object):
         [y,x]=np.where(map>=threshold)
         y = np.reshape(y,(len(y),1))
         x = np.reshape(x,(len(y),1))
-        a = np.where(map.flatten(1)>=threshold)
+        a = np.where(map.flatten()>=threshold)
 
         if y.shape[0]==1:
             y=y.T
             x=x.T
-            score=np.reshape(map.flatten(1)[a[0]],(1,1))
+            score=np.reshape(map.flatten()[a[0]],(1,1))
             dx1=dx1.T
             dy1=dy1.T
             dx2=dx2.T
             dy2=dy2.T
         else:
 
-            score=map.flatten(1)[a[0]]
+            score=map.flatten()[a[0]]
             score=np.reshape(score, (a[0].shape[0],1))
             
-        dx1N=np.reshape(dx1.flatten(1)[a[0]], (a[0].shape[0],1))
-        dy1N=np.reshape(dy1.flatten(1)[a[0]], (a[0].shape[0],1))
-        dx2N=np.reshape(dx2.flatten(1)[a[0]], (a[0].shape[0],1))
-        dy2N=np.reshape(dy2.flatten(1)[a[0]], (a[0].shape[0],1))  
+        dx1N=np.reshape(dx1.flatten()[a[0]], (a[0].shape[0],1))
+        dy1N=np.reshape(dy1.flatten()[a[0]], (a[0].shape[0],1))
+        dx2N=np.reshape(dx2.flatten()[a[0]], (a[0].shape[0],1))
+        dy2N=np.reshape(dy2.flatten()[a[0]], (a[0].shape[0],1))  
         
         reg=np.hstack((dx1N,dy1N,dx2N,dy2N))
         
